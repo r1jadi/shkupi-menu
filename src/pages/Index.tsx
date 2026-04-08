@@ -84,7 +84,7 @@ const Index = () => {
             {popularItems.length > 0 && (
               <section
                 id="popular"
-                ref={(el) => { sectionRefs.current["popular"] = el; }}
+                ref={(el: HTMLDivElement | null) => { sectionRefs.current["popular"] = el; }}
                 className="mb-10"
               >
                 <motion.h2
