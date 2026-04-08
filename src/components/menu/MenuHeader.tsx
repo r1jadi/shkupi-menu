@@ -18,7 +18,7 @@ export function MenuHeader() {
           transition={{ duration: 0.6 }}
         >
           <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground font-body mb-2">
-            Est. 2024
+            Bul. Krste Misirkov, Skopje, North Macedonia, 1000
           </p>
           <h1 className="text-4xl md:text-5xl font-display font-bold text-foreground tracking-tight">
             Restaurant Shkupi
