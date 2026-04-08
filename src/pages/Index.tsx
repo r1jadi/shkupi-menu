@@ -112,7 +112,7 @@ const Index = () => {
                   <section
                     key={category.id}
                     id={category.id}
-                    ref={(el) => { sectionRefs.current[category.id] = el; }}
+                    ref={(el: HTMLDivElement | null) => { sectionRefs.current[category.id] = el; }}
                     className="mb-10 scroll-mt-32"
                   >
                     <motion.div
