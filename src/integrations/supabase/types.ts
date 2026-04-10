@@ -18,24 +18,36 @@ export type Database = {
         Row: {
           created_at: string
           description: string | null
+          description_al: string | null
+          description_mk: string | null
           id: string
           name: string
+          name_al: string | null
+          name_mk: string | null
           sort_order: number
           updated_at: string
         }
         Insert: {
           created_at?: string
           description?: string | null
+          description_al?: string | null
+          description_mk?: string | null
           id?: string
           name: string
+          name_al?: string | null
+          name_mk?: string | null
           sort_order?: number
           updated_at?: string
         }
         Update: {
           created_at?: string
           description?: string | null
+          description_al?: string | null
+          description_mk?: string | null
           id?: string
           name?: string
+          name_al?: string | null
+          name_mk?: string | null
           sort_order?: number
           updated_at?: string
         }
@@ -46,11 +58,15 @@ export type Database = {
           category_id: string
           created_at: string
           description: string | null
+          description_al: string | null
+          description_mk: string | null
           id: string
           image_url: string | null
           is_available: boolean
           is_popular: boolean
           name: string
+          name_al: string | null
+          name_mk: string | null
           price: number
           sort_order: number
           updated_at: string
@@ -59,11 +75,15 @@ export type Database = {
           category_id: string
           created_at?: string
           description?: string | null
+          description_al?: string | null
+          description_mk?: string | null
           id?: string
           image_url?: string | null
           is_available?: boolean
           is_popular?: boolean
           name: string
+          name_al?: string | null
+          name_mk?: string | null
           price: number
           sort_order?: number
           updated_at?: string
@@ -72,11 +92,15 @@ export type Database = {
           category_id?: string
           created_at?: string
           description?: string | null
+          description_al?: string | null
+          description_mk?: string | null
           id?: string
           image_url?: string | null
           is_available?: boolean
           is_popular?: boolean
           name?: string
+          name_al?: string | null
+          name_mk?: string | null
           price?: number
           sort_order?: number
           updated_at?: string

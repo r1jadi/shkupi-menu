@@ -2,6 +2,7 @@ import { useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import type { Category } from "@/hooks/useCategories";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { useLocalized } from "@/hooks/useLocalized";
 
 interface Props {
   categories: Category[];
@@ -14,6 +15,7 @@ export function CategoryNav({ categories, activeCategory, onSelect, hasPopular }
   const scrollRef = useRef<HTMLDivElement>(null);
   const activeRef = useRef<HTMLButtonElement>(null);
   const { t } = useLanguage();
+  const loc = useLocalized();
 
   useEffect(() => {
     if (activeRef.current && scrollRef.current) {
@@ -25,8 +27,8 @@ export function CategoryNav({ categories, activeCategory, onSelect, hasPopular }
   }, [activeCategory]);
 
   const allItems = [
-    ...(hasPopular ? [{ id: "popular", name: t("nav.popular") }] : []),
-    ...categories.map((c) => ({ id: c.id, name: c.name })),
+    ...(hasPopular ? [{ id: "popular", label: t("nav.popular") }] : []),
+    ...categories.map((c) => ({ id: c.id, label: loc.name(c) })),
   ];
 
   return (
@@ -52,7 +54,7 @@ export function CategoryNav({ categories, activeCategory, onSelect, hasPopular }
                   transition={{ type: "spring", bounce: 0.2, duration: 0.4 }}
                 />
               )}
-              <span className="relative z-10">{item.name}</span>
+              <span className="relative z-10">{item.label}</span>
             </button>
           );
         })}
