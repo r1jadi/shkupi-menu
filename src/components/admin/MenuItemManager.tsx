@@ -79,9 +79,9 @@ export function MenuItemManager() {
     try {
       const url = await uploadMenuImage(file);
       setField("image_url", url);
-      toast.success("Image uploaded");
+      toast.success(t("admin.item.uploaded"));
     } catch {
-      toast.error("Failed to upload image");
+      toast.error(t("admin.item.uploadFailed"));
     }
     setUploading(false);
   };
@@ -105,24 +105,24 @@ export function MenuItemManager() {
     try {
       if (editId) {
         await updateItem.mutateAsync({ id: editId, ...payload } as any);
-        toast.success("Item updated");
+        toast.success(t("admin.item.updated"));
       } else {
         await createItem.mutateAsync({ ...payload, sort_order: (items?.length || 0) + 1 } as any);
-        toast.success("Item created");
+        toast.success(t("admin.item.created"));
       }
       setDialogOpen(false);
       resetForm();
     } catch {
-      toast.error("Something went wrong");
+      toast.error(t("categories.error"));
     }
   };
 
   const handleDelete = async (id: string) => {
     try {
       await deleteItem.mutateAsync(id);
-      toast.success("Item deleted");
+      toast.success(t("admin.item.deleted"));
     } catch {
-      toast.error("Failed to delete");
+      toast.error(t("admin.item.deleteFailed"));
     }
   };
 
@@ -130,7 +130,7 @@ export function MenuItemManager() {
     try {
       await updateItem.mutateAsync({ id: item.id, [field]: !item[field] });
     } catch {
-      toast.error("Failed to update");
+      toast.error(t("admin.item.updateFailed"));
     }
   };
 
@@ -141,12 +141,12 @@ export function MenuItemManager() {
         <Dialog open={dialogOpen} onOpenChange={(o) => { setDialogOpen(o); if (!o) resetForm(); }}>
           <DialogTrigger asChild>
             <Button className="font-body gap-2" disabled={!categories?.length}>
-              <Plus className="w-4 h-4" /> {t("categories.add").replace("Category", "Item")}
+              <Plus className="w-4 h-4" /> {t("admin.item.add")}
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle className="font-display">{editId ? "Edit" : "New"} Menu Item</DialogTitle>
+              <DialogTitle className="font-display">{editId ? t("admin.item.edit") : t("admin.item.new")} {t("admin.item.menuItem")}</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4 mt-2">
               {/* Name & Description with language tabs */}
@@ -158,46 +158,46 @@ export function MenuItemManager() {
                 </TabsList>
                 <TabsContent value="en" className="space-y-3 mt-3">
                   <div className="space-y-2">
-                    <Label className="font-body">Name (English) *</Label>
+                    <Label className="font-body">{t("admin.item.nameEnglish")}</Label>
                     <Input value={form.name} onChange={(e) => setField("name", e.target.value)} required className="h-11 font-body" />
                   </div>
                   <div className="space-y-2">
-                    <Label className="font-body">Description (English)</Label>
+                    <Label className="font-body">{t("admin.item.descriptionEnglish")}</Label>
                     <Textarea value={form.description} onChange={(e) => setField("description", e.target.value)} className="font-body" />
                   </div>
                 </TabsContent>
                 <TabsContent value="al" className="space-y-3 mt-3">
                   <div className="space-y-2">
-                    <Label className="font-body">Emri (Shqip)</Label>
-                    <Input value={form.name_al} onChange={(e) => setField("name_al", e.target.value)} className="h-11 font-body" placeholder="Leave empty to use English" />
+                    <Label className="font-body">{t("admin.item.nameAlbanian")}</Label>
+                    <Input value={form.name_al} onChange={(e) => setField("name_al", e.target.value)} className="h-11 font-body" placeholder={t("admin.placeholder.useEnglish")} />
                   </div>
                   <div className="space-y-2">
-                    <Label className="font-body">Përshkrimi (Shqip)</Label>
-                    <Textarea value={form.description_al} onChange={(e) => setField("description_al", e.target.value)} className="font-body" placeholder="Leave empty to use English" />
+                    <Label className="font-body">{t("admin.item.descriptionAlbanian")}</Label>
+                    <Textarea value={form.description_al} onChange={(e) => setField("description_al", e.target.value)} className="font-body" placeholder={t("admin.placeholder.useEnglish")} />
                   </div>
                 </TabsContent>
                 <TabsContent value="mk" className="space-y-3 mt-3">
                   <div className="space-y-2">
-                    <Label className="font-body">Име (Македонски)</Label>
-                    <Input value={form.name_mk} onChange={(e) => setField("name_mk", e.target.value)} className="h-11 font-body" placeholder="Leave empty to use English" />
+                    <Label className="font-body">{t("admin.item.nameMacedonian")}</Label>
+                    <Input value={form.name_mk} onChange={(e) => setField("name_mk", e.target.value)} className="h-11 font-body" placeholder={t("admin.placeholder.useEnglish")} />
                   </div>
                   <div className="space-y-2">
-                    <Label className="font-body">Опис (Македонски)</Label>
-                    <Textarea value={form.description_mk} onChange={(e) => setField("description_mk", e.target.value)} className="font-body" placeholder="Leave empty to use English" />
+                    <Label className="font-body">{t("admin.item.descriptionMacedonian")}</Label>
+                    <Textarea value={form.description_mk} onChange={(e) => setField("description_mk", e.target.value)} className="font-body" placeholder={t("admin.placeholder.useEnglish")} />
                   </div>
                 </TabsContent>
               </Tabs>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label className="font-body">Price (ден)</Label>
+                  <Label className="font-body">{t("admin.item.price")}</Label>
                   <Input type="number" step="1" min="0" value={form.price} onChange={(e) => setField("price", e.target.value)} required className="h-11 font-body" />
                 </div>
                 <div className="space-y-2">
-                  <Label className="font-body">Category</Label>
+                  <Label className="font-body">{t("admin.item.category")}</Label>
                   <Select value={form.category_id} onValueChange={(v) => setField("category_id", v)}>
                     <SelectTrigger className="h-11 font-body">
-                      <SelectValue placeholder="Select..." />
+                      <SelectValue placeholder={t("admin.item.select")} />
                     </SelectTrigger>
                     <SelectContent>
                       {categories?.map((c) => (
@@ -210,7 +210,7 @@ export function MenuItemManager() {
 
               {/* Image upload */}
               <div className="space-y-2">
-                <Label className="font-body">Image</Label>
+                <Label className="font-body">{t("admin.item.image")}</Label>
                 <div className="flex items-center gap-3">
                   {form.image_url ? (
                     <img src={form.image_url} alt="" className="w-16 h-16 rounded-lg object-cover" />
@@ -221,13 +221,13 @@ export function MenuItemManager() {
                   )}
                   <label className="cursor-pointer">
                     <span className="text-sm text-primary font-body font-medium hover:underline">
-                      {uploading ? "Uploading..." : form.image_url ? "Change image" : "Upload image"}
+                      {uploading ? t("admin.item.uploading") : form.image_url ? t("admin.item.changeImage") : t("admin.item.uploadImage")}
                     </span>
                     <input type="file" accept="image/*" onChange={handleImage} className="hidden" disabled={uploading} />
                   </label>
                   {form.image_url && (
                     <button type="button" onClick={() => setField("image_url", "")} className="text-sm text-destructive font-body">
-                      Remove
+                      {t("admin.item.remove")}
                     </button>
                   )}
                 </div>
@@ -235,16 +235,16 @@ export function MenuItemManager() {
 
               {/* Toggles */}
               <div className="flex items-center justify-between py-2">
-                <Label className="font-body">Available</Label>
+                <Label className="font-body">{t("admin.item.available")}</Label>
                 <Switch checked={form.is_available} onCheckedChange={(v) => setField("is_available", v)} />
               </div>
               <div className="flex items-center justify-between py-2">
-                <Label className="font-body">Mark as Popular</Label>
+                <Label className="font-body">{t("admin.item.markPopular")}</Label>
                 <Switch checked={form.is_popular} onCheckedChange={(v) => setField("is_popular", v)} />
               </div>
 
               <Button type="submit" className="w-full h-11 font-body" disabled={createItem.isPending || updateItem.isPending || !form.category_id}>
-                {editId ? t("categories.save") : "Create Item"}
+                {editId ? t("categories.save") : t("admin.item.create")}
               </Button>
             </form>
           </DialogContent>
@@ -253,7 +253,7 @@ export function MenuItemManager() {
 
       {!categories?.length && (
         <div className="text-center py-8 text-muted-foreground font-body">
-          Create a category first before adding menu items.
+          {t("admin.item.createCategoryFirst")}
         </div>
       )}
 
@@ -263,7 +263,7 @@ export function MenuItemManager() {
         </div>
       ) : items?.length === 0 ? (
         <div className="text-center py-12 text-muted-foreground font-body">
-          No menu items yet. Add your first dish!
+          {t("admin.item.empty")}
         </div>
       ) : (
         <div className="space-y-2">
@@ -300,7 +300,7 @@ export function MenuItemManager() {
                     <AlertDialogContent>
                       <AlertDialogHeader>
                         <AlertDialogTitle className="font-display">{t("categories.deleteTitle")} "{item.name}"?</AlertDialogTitle>
-                        <AlertDialogDescription className="font-body">This action cannot be undone.</AlertDialogDescription>
+                        <AlertDialogDescription className="font-body">{t("admin.delete.cannotUndo")}</AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
                         <AlertDialogCancel className="font-body">{t("categories.cancel")}</AlertDialogCancel>

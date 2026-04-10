@@ -55,7 +55,7 @@ export default function AdminLogin() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="manager@shkupi.com"
+              placeholder={t("admin.login.emailPlaceholder")}
               required
               className="h-12 font-body"
             />

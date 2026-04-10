@@ -101,7 +101,7 @@ export function CategoryManager() {
                 </TabsList>
                 <TabsContent value="en" className="space-y-3 mt-3">
                   <div className="space-y-2">
-                    <Label className="font-body">Name (English) *</Label>
+                    <Label className="font-body">{t("categories.nameEnglishRequired")}</Label>
                     <Input value={name} onChange={(e) => setName(e.target.value)} placeholder={t("categories.namePlaceholder")} required className="h-11 font-body" />
                   </div>
                   <div className="space-y-2">
@@ -111,22 +111,22 @@ export function CategoryManager() {
                 </TabsContent>
                 <TabsContent value="al" className="space-y-3 mt-3">
                   <div className="space-y-2">
-                    <Label className="font-body">Emri (Shqip)</Label>
-                    <Input value={nameAl} onChange={(e) => setNameAl(e.target.value)} className="h-11 font-body" placeholder="Leave empty to use English" />
+                    <Label className="font-body">{t("categories.nameAlbanian")}</Label>
+                    <Input value={nameAl} onChange={(e) => setNameAl(e.target.value)} className="h-11 font-body" placeholder={t("admin.placeholder.useEnglish")} />
                   </div>
                   <div className="space-y-2">
-                    <Label className="font-body">Përshkrimi (Shqip)</Label>
-                    <Textarea value={descAl} onChange={(e) => setDescAl(e.target.value)} className="font-body" placeholder="Leave empty to use English" />
+                    <Label className="font-body">{t("categories.descriptionAlbanian")}</Label>
+                    <Textarea value={descAl} onChange={(e) => setDescAl(e.target.value)} className="font-body" placeholder={t("admin.placeholder.useEnglish")} />
                   </div>
                 </TabsContent>
                 <TabsContent value="mk" className="space-y-3 mt-3">
                   <div className="space-y-2">
-                    <Label className="font-body">Име (Македонски)</Label>
-                    <Input value={nameMk} onChange={(e) => setNameMk(e.target.value)} className="h-11 font-body" placeholder="Leave empty to use English" />
+                    <Label className="font-body">{t("categories.nameMacedonian")}</Label>
+                    <Input value={nameMk} onChange={(e) => setNameMk(e.target.value)} className="h-11 font-body" placeholder={t("admin.placeholder.useEnglish")} />
                   </div>
                   <div className="space-y-2">
-                    <Label className="font-body">Опис (Македонски)</Label>
-                    <Textarea value={descMk} onChange={(e) => setDescMk(e.target.value)} className="font-body" placeholder="Leave empty to use English" />
+                    <Label className="font-body">{t("categories.descriptionMacedonian")}</Label>
+                    <Textarea value={descMk} onChange={(e) => setDescMk(e.target.value)} className="font-body" placeholder={t("admin.placeholder.useEnglish")} />
                   </div>
                 </TabsContent>
               </Tabs>

@@ -1,14 +1,16 @@
 import { QRCodeSVG } from "qrcode.react";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 export function QRCodeSection() {
   const menuUrl = window.location.origin;
+  const { t } = useLanguage();
 
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-display font-semibold text-foreground">QR Code</h2>
+        <h2 className="text-xl font-display font-semibold text-foreground">{t("admin.tabs.qr")}</h2>
         <p className="text-muted-foreground font-body text-sm mt-1">
-          Print this QR code and place it on your tables. Customers can scan it to view the menu.
+          {t("admin.qr.instructions")}
         </p>
       </div>
 
@@ -25,7 +27,7 @@ export function QRCodeSection() {
         </div>
 
         <div className="text-center">
-          <p className="font-display font-semibold text-foreground text-lg">Scan to View Menu</p>
+          <p className="font-display font-semibold text-foreground text-lg">{t("admin.qr.scanToView")}</p>
           <p className="text-muted-foreground font-body text-sm mt-1">Restaurant Shkupi</p>
         </div>
 
@@ -45,7 +47,7 @@ export function QRCodeSection() {
             }}
             className="px-4 py-2 bg-primary text-primary-foreground rounded-lg font-body text-sm font-medium hover:opacity-90 transition-opacity"
           >
-            Download SVG
+            {t("admin.qr.downloadSvg")}
           </button>
         </div>
 
@@ -56,7 +58,7 @@ export function QRCodeSection() {
 
       <div className="p-4 bg-muted/50 rounded-xl">
         <p className="text-sm font-body text-muted-foreground">
-          <strong className="text-foreground">Menu URL:</strong>{" "}
+          <strong className="text-foreground">{t("admin.qr.menuUrl")}</strong>{" "}
           <code className="text-primary">{menuUrl}</code>
         </p>
       </div>
