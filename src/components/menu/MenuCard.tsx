@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import type { MenuItem } from "@/hooks/useMenuItems";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 interface Props {
   item: MenuItem;
@@ -8,6 +9,8 @@ interface Props {
 }
 
 export function MenuCard({ item, index, isPopular }: Props) {
+  const { t } = useLanguage();
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -18,7 +21,6 @@ export function MenuCard({ item, index, isPopular }: Props) {
       className="group relative bg-card rounded-xl border border-border overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300"
     >
       <div className="flex gap-4 p-4">
-        {/* Content */}
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">
@@ -27,7 +29,7 @@ export function MenuCard({ item, index, isPopular }: Props) {
               </h3>
               {isPopular && (
                 <span className="inline-flex items-center gap-1 mt-1 text-xs font-body font-medium text-gold">
-                  ★ Popular Choice
+                  {t("menu.popularChoice")}
                 </span>
               )}
             </div>
@@ -42,7 +44,6 @@ export function MenuCard({ item, index, isPopular }: Props) {
           )}
         </div>
 
-        {/* Image */}
         {item.image_url && (
           <div className="shrink-0 w-20 h-20 md:w-24 md:h-24 rounded-lg overflow-hidden">
             <img
@@ -55,7 +56,6 @@ export function MenuCard({ item, index, isPopular }: Props) {
         )}
       </div>
 
-      {/* Hover accent line */}
       <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary/0 via-primary/60 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
     </motion.div>
   );

@@ -5,49 +5,33 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
 } from "@/components/ui/dialog";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import { Plus, Pencil, Trash2, GripVertical } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 export function CategoryManager() {
   const { data: categories, isLoading } = useCategories();
   const createCategory = useCreateCategory();
   const updateCategory = useUpdateCategory();
   const deleteCategory = useDeleteCategory();
+  const { t } = useLanguage();
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
 
-  const resetForm = () => {
-    setName("");
-    setDescription("");
-    setEditId(null);
-  };
+  const resetForm = () => { setName(""); setDescription(""); setEditId(null); };
 
   const openEdit = (cat: { id: string; name: string; description: string | null }) => {
-    setEditId(cat.id);
-    setName(cat.name);
-    setDescription(cat.description || "");
-    setDialogOpen(true);
+    setEditId(cat.id); setName(cat.name); setDescription(cat.description || ""); setDialogOpen(true);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -55,53 +39,50 @@ export function CategoryManager() {
     try {
       if (editId) {
         await updateCategory.mutateAsync({ id: editId, name, description: description || null });
-        toast.success("Category updated");
+        toast.success(t("categories.updated"));
       } else {
         const sortOrder = (categories?.length || 0) + 1;
         await createCategory.mutateAsync({ name, description: description || null, sort_order: sortOrder });
-        toast.success("Category created");
+        toast.success(t("categories.created"));
       }
-      setDialogOpen(false);
-      resetForm();
+      setDialogOpen(false); resetForm();
     } catch {
-      toast.error("Something went wrong");
+      toast.error(t("categories.error"));
     }
   };
 
   const handleDelete = async (id: string) => {
     try {
       await deleteCategory.mutateAsync(id);
-      toast.success("Category deleted");
+      toast.success(t("categories.deleted"));
     } catch {
-      toast.error("Failed to delete — category may have items");
+      toast.error(t("categories.deleteError"));
     }
   };
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-display font-semibold text-foreground">Categories</h2>
+        <h2 className="text-xl font-display font-semibold text-foreground">{t("categories.title")}</h2>
         <Dialog open={dialogOpen} onOpenChange={(o) => { setDialogOpen(o); if (!o) resetForm(); }}>
           <DialogTrigger asChild>
-            <Button className="font-body gap-2">
-              <Plus className="w-4 h-4" /> Add Category
-            </Button>
+            <Button className="font-body gap-2"><Plus className="w-4 h-4" /> {t("categories.add")}</Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
-              <DialogTitle className="font-display">{editId ? "Edit" : "New"} Category</DialogTitle>
+              <DialogTitle className="font-display">{editId ? t("categories.edit") : t("categories.new")}</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4 mt-2">
               <div className="space-y-2">
-                <Label className="font-body">Name</Label>
-                <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Appetizers" required className="h-11 font-body" />
+                <Label className="font-body">{t("categories.name")}</Label>
+                <Input value={name} onChange={(e) => setName(e.target.value)} placeholder={t("categories.namePlaceholder")} required className="h-11 font-body" />
               </div>
               <div className="space-y-2">
-                <Label className="font-body">Description (optional)</Label>
-                <Textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="A short description..." className="font-body" />
+                <Label className="font-body">{t("categories.description")}</Label>
+                <Textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder={t("categories.descPlaceholder")} className="font-body" />
               </div>
               <Button type="submit" className="w-full h-11 font-body" disabled={createCategory.isPending || updateCategory.isPending}>
-                {editId ? "Save Changes" : "Create Category"}
+                {editId ? t("categories.save") : t("categories.create")}
               </Button>
             </form>
           </DialogContent>
@@ -113,9 +94,7 @@ export function CategoryManager() {
           {[1, 2, 3].map((i) => <Skeleton key={i} className="h-16 rounded-xl" />)}
         </div>
       ) : categories?.length === 0 ? (
-        <div className="text-center py-12 text-muted-foreground font-body">
-          No categories yet. Create one to get started.
-        </div>
+        <div className="text-center py-12 text-muted-foreground font-body">{t("categories.empty")}</div>
       ) : (
         <div className="space-y-2">
           {categories?.map((cat) => (
@@ -126,27 +105,19 @@ export function CategoryManager() {
                 {cat.description && <p className="text-sm text-muted-foreground font-body truncate">{cat.description}</p>}
               </div>
               <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                <Button variant="ghost" size="icon" onClick={() => openEdit(cat)}>
-                  <Pencil className="w-4 h-4" />
-                </Button>
+                <Button variant="ghost" size="icon" onClick={() => openEdit(cat)}><Pencil className="w-4 h-4" /></Button>
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive">
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
+                    <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive"><Trash2 className="w-4 h-4" /></Button>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
-                      <AlertDialogTitle className="font-display">Delete "{cat.name}"?</AlertDialogTitle>
-                      <AlertDialogDescription className="font-body">
-                        This will also delete all menu items in this category. This action cannot be undone.
-                      </AlertDialogDescription>
+                      <AlertDialogTitle className="font-display">{t("categories.deleteTitle")} "{cat.name}"?</AlertDialogTitle>
+                      <AlertDialogDescription className="font-body">{t("categories.deleteDesc")}</AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                      <AlertDialogCancel className="font-body">Cancel</AlertDialogCancel>
-                      <AlertDialogAction onClick={() => handleDelete(cat.id)} className="bg-destructive text-destructive-foreground font-body">
-                        Delete
-                      </AlertDialogAction>
+                      <AlertDialogCancel className="font-body">{t("categories.cancel")}</AlertDialogCancel>
+                      <AlertDialogAction onClick={() => handleDelete(cat.id)} className="bg-destructive text-destructive-foreground font-body">{t("categories.delete")}</AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>

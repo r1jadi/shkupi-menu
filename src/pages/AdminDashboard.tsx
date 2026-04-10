@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Navigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -8,9 +7,11 @@ import { MenuItemManager } from "@/components/admin/MenuItemManager";
 import { QRCodeSection } from "@/components/admin/QRCodeSection";
 import { LogOut, LayoutGrid, UtensilsCrossed, QrCode } from "lucide-react";
 import { motion } from "framer-motion";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 export default function AdminDashboard() {
   const { user, loading, signOut } = useAuth();
+  const { t } = useLanguage();
 
   if (loading) {
     return (
@@ -24,16 +25,15 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-40">
         <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-display font-bold text-foreground">Restaurant Shkupi</h1>
-            <p className="text-xs text-muted-foreground font-body">Menu Manager</p>
+            <h1 className="text-xl font-display font-bold text-foreground">{t("admin.dashboard.title")}</h1>
+            <p className="text-xs text-muted-foreground font-body">{t("admin.dashboard.subtitle")}</p>
           </div>
           <Button variant="ghost" size="sm" onClick={signOut} className="font-body text-muted-foreground">
             <LogOut className="w-4 h-4 mr-2" />
-            Sign Out
+            {t("admin.signOut")}
           </Button>
         </div>
       </header>
@@ -47,15 +47,15 @@ export default function AdminDashboard() {
           <TabsList className="grid w-full grid-cols-3 max-w-md h-12">
             <TabsTrigger value="items" className="font-body gap-2">
               <UtensilsCrossed className="w-4 h-4" />
-              Menu Items
+              {t("admin.tabs.items")}
             </TabsTrigger>
             <TabsTrigger value="categories" className="font-body gap-2">
               <LayoutGrid className="w-4 h-4" />
-              Categories
+              {t("admin.tabs.categories")}
             </TabsTrigger>
             <TabsTrigger value="qr" className="font-body gap-2">
               <QrCode className="w-4 h-4" />
-              QR Code
+              {t("admin.tabs.qr")}
             </TabsTrigger>
           </TabsList>
 

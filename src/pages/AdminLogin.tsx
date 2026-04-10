@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { Lock } from "lucide-react";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
@@ -14,6 +15,7 @@ export default function AdminLogin() {
   const [loading, setLoading] = useState(false);
   const { signIn } = useAuth();
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,9 +23,9 @@ export default function AdminLogin() {
     const { error } = await signIn(email, password);
     setLoading(false);
     if (error) {
-      toast.error("Invalid credentials");
+      toast.error(t("admin.login.error"));
     } else {
-      toast.success("Welcome back!");
+      toast.success(t("admin.login.success"));
       navigate("/admin/dashboard");
     }
   };
@@ -39,15 +41,15 @@ export default function AdminLogin() {
           <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
             <Lock className="w-6 h-6 text-primary" />
           </div>
-          <h1 className="text-2xl font-display font-bold text-foreground">Manager Login</h1>
+          <h1 className="text-2xl font-display font-bold text-foreground">{t("admin.login.title")}</h1>
           <p className="text-muted-foreground text-sm font-body mt-1">
-            Sign in to manage your restaurant menu
+            {t("admin.login.subtitle")}
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="email" className="font-body text-sm">Email</Label>
+            <Label htmlFor="email" className="font-body text-sm">{t("admin.login.email")}</Label>
             <Input
               id="email"
               type="email"
@@ -59,7 +61,7 @@ export default function AdminLogin() {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password" className="font-body text-sm">Password</Label>
+            <Label htmlFor="password" className="font-body text-sm">{t("admin.login.password")}</Label>
             <Input
               id="password"
               type="password"
@@ -71,7 +73,7 @@ export default function AdminLogin() {
             />
           </div>
           <Button type="submit" className="w-full h-12 font-body font-semibold text-base" disabled={loading}>
-            {loading ? "Signing in..." : "Sign In"}
+            {loading ? t("admin.login.loading") : t("admin.login.submit")}
           </Button>
         </form>
       </motion.div>

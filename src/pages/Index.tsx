@@ -7,16 +7,17 @@ import { MenuSkeleton } from "@/components/menu/MenuSkeleton";
 import { MenuHeader } from "@/components/menu/MenuHeader";
 import { CategoryNav } from "@/components/menu/CategoryNav";
 import { UtensilsCrossed } from "lucide-react";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const Index = () => {
   const { data: categories, isLoading: catLoading } = useCategories();
   const { data: menuItems, isLoading: itemsLoading } = useMenuItems();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const { t } = useLanguage();
 
   const isLoading = catLoading || itemsLoading;
 
-  // Set first category as active
   useEffect(() => {
     if (categories?.length && !activeCategory) {
       setActiveCategory(categories[0].id);
@@ -28,7 +29,6 @@ const Index = () => {
     sectionRefs.current[id]?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  // Track scroll to update active category
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -55,7 +55,6 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <MenuHeader />
 
-      {/* Category Navigation */}
       {!isLoading && categories && categories.length > 0 && (
         <CategoryNav
           categories={categories}
@@ -75,12 +74,11 @@ const Index = () => {
             className="text-center py-20"
           >
             <UtensilsCrossed className="w-16 h-16 mx-auto text-muted-foreground/40 mb-4" />
-            <h2 className="text-2xl font-display text-foreground mb-2">Menu Coming Soon</h2>
-            <p className="text-muted-foreground">We're preparing something delicious for you.</p>
+            <h2 className="text-2xl font-display text-foreground mb-2">{t("menu.comingSoon")}</h2>
+            <p className="text-muted-foreground">{t("menu.comingSoonDesc")}</p>
           </motion.div>
         ) : (
           <>
-            {/* Popular Items Section */}
             {popularItems.length > 0 && (
               <section
                 id="popular"
@@ -93,7 +91,7 @@ const Index = () => {
                   viewport={{ once: true }}
                   className="text-2xl font-display font-semibold text-foreground mb-5 flex items-center gap-2"
                 >
-                  <span className="text-gold">★</span> Popular Dishes
+                  <span className="text-gold">★</span> {t("menu.popularDishes")}
                 </motion.h2>
                 <div className="grid gap-4">
                   {popularItems.map((item, i) => (
@@ -103,7 +101,6 @@ const Index = () => {
               </section>
             )}
 
-            {/* Category Sections */}
             <AnimatePresence>
               {categories?.map((category) => {
                 const items = availableItems.filter((item) => item.category_id === category.id);
@@ -140,10 +137,9 @@ const Index = () => {
         )}
       </main>
 
-      {/* Footer */}
       <footer className="text-center py-8 border-t border-border">
         <p className="text-sm text-muted-foreground font-body">
-          © {new Date().getFullYear()} Restaurant Shkupi — All rights reserved — Created by Bleta 🐝
+          © {new Date().getFullYear()} Restaurant Shkupi — {t("footer.rights")} — Created by Bleta 🐝
         </p>
       </footer>
     </div>
