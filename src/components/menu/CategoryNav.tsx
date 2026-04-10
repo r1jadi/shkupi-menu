@@ -1,6 +1,7 @@
 import { useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import type { Category } from "@/hooks/useCategories";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 interface Props {
   categories: Category[];
@@ -12,8 +13,8 @@ interface Props {
 export function CategoryNav({ categories, activeCategory, onSelect, hasPopular }: Props) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const activeRef = useRef<HTMLButtonElement>(null);
+  const { t } = useLanguage();
 
-  // Auto-scroll active button into view
   useEffect(() => {
     if (activeRef.current && scrollRef.current) {
       const container = scrollRef.current;
@@ -24,7 +25,7 @@ export function CategoryNav({ categories, activeCategory, onSelect, hasPopular }
   }, [activeCategory]);
 
   const allItems = [
-    ...(hasPopular ? [{ id: "popular", name: "★ Popular" }] : []),
+    ...(hasPopular ? [{ id: "popular", name: t("nav.popular") }] : []),
     ...categories.map((c) => ({ id: c.id, name: c.name })),
   ];
 

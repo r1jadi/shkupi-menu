@@ -1,8 +1,12 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Settings } from "lucide-react";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 export function MenuHeader() {
+  const { t } = useLanguage();
+
   return (
     <header className="relative overflow-hidden bg-gradient-to-b from-primary/10 via-background to-background pt-10 pb-6">
       {/* Decorative elements */}
@@ -12,13 +16,18 @@ export function MenuHeader() {
       </div>
 
       <div className="relative max-w-3xl mx-auto px-4 text-center">
+        {/* Language Switcher */}
+        <div className="absolute top-0 left-4">
+          <LanguageSwitcher />
+        </div>
+
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
           <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground font-body mb-2">
-            Bul. Krste Misirkov, Skopje, North Macedonia, 1000
+            {t("header.address")}
           </p>
           <h1 className="text-4xl md:text-5xl font-display font-bold text-foreground tracking-tight">
             Restaurant Shkupi
@@ -29,7 +38,7 @@ export function MenuHeader() {
             <span className="h-px w-12 bg-primary/30" />
           </div>
           <p className="text-muted-foreground font-body text-sm mt-3 max-w-md mx-auto">
-            Authentic flavors, crafted with passion. Explore our carefully curated menu.
+            {t("header.subtitle")}
           </p>
         </motion.div>
 
