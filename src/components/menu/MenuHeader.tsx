@@ -16,11 +16,6 @@ export function MenuHeader() {
       </div>
 
       <div className="relative max-w-3xl mx-auto px-4 text-center">
-        {/* Language Switcher */}
-        <div className="absolute top-0 left-4">
-          <LanguageSwitcher />
-        </div>
-
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -29,6 +24,9 @@ export function MenuHeader() {
           <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground font-body mb-2">
             {t("header.address")}
           </p>
+          <div className="mb-4">
+            <LanguageSwitcher />
+          </div>
           <h1 className="text-4xl md:text-5xl font-display font-bold text-foreground tracking-tight">
             Restaurant Shkupi
           </h1>

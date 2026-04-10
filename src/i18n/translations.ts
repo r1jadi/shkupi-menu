@@ -22,7 +22,7 @@ const translations = {
   // Category Nav
   "nav.popular": {
     en: "★ Popular",
-    al: "★ Populare",
+    al: "★ Më të kërkuarat",
     mk: "★ Популарни",
   },
 
@@ -39,12 +39,12 @@ const translations = {
   },
   "menu.popularDishes": {
     en: "Popular Dishes",
-    al: "Gjellët Populare",
+    al: "Më të kërkuarat",
     mk: "Популарни Јадења",
   },
   "menu.popularChoice": {
     en: "★ Popular Choice",
-    al: "★ Zgjedhje Populare",
+    al: "★ Më e kërkuara",
     mk: "★ Популарен Избор",
   },
 
@@ -53,6 +53,11 @@ const translations = {
     en: "All rights reserved",
     al: "Të gjitha të drejtat e rezervuara",
     mk: "Сите права задржани",
+  },
+  "footer.createdBy": {
+    en: "Created by",
+    al: "Krijuar nga",
+    mk: "Креирано од",
   },
 
   // Admin Login

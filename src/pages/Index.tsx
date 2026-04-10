@@ -141,7 +141,7 @@ const Index = () => {
 
       <footer className="text-center py-8 border-t border-border">
         <p className="text-sm text-muted-foreground font-body">
-          © {new Date().getFullYear()} Restaurant Shkupi — {t("footer.rights")} — Created by Bleta 🐝
+          © {new Date().getFullYear()} Restaurant Shkupi — {t("footer.rights")} — {t("footer.createdBy")} Bleta 🐝
         </p>
       </footer>
     </div>
