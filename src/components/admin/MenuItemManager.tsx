@@ -12,11 +12,17 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { toast } from "sonner";
 import { Plus, Pencil, Trash2, ImagePlus } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { MenuItem } from "@/hooks/useMenuItems";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 interface FormState {
   name: string;
+  name_al: string;
+  name_mk: string;
   description: string;
+  description_al: string;
+  description_mk: string;
   price: string;
   category_id: string;
   is_available: boolean;
@@ -25,7 +31,9 @@ interface FormState {
 }
 
 const emptyForm: FormState = {
-  name: "", description: "", price: "", category_id: "", is_available: true, is_popular: false, image_url: "",
+  name: "", name_al: "", name_mk: "",
+  description: "", description_al: "", description_mk: "",
+  price: "", category_id: "", is_available: true, is_popular: false, image_url: "",
 };
 
 export function MenuItemManager() {
@@ -34,6 +42,7 @@ export function MenuItemManager() {
   const createItem = useCreateMenuItem();
   const updateItem = useUpdateMenuItem();
   const deleteItem = useDeleteMenuItem();
+  const { t } = useLanguage();
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
@@ -47,7 +56,11 @@ export function MenuItemManager() {
     setEditId(item.id);
     setForm({
       name: item.name,
+      name_al: (item as any).name_al || "",
+      name_mk: (item as any).name_mk || "",
       description: item.description || "",
+      description_al: (item as any).description_al || "",
+      description_mk: (item as any).description_mk || "",
       price: String(item.price),
       category_id: item.category_id,
       is_available: item.is_available,
@@ -77,7 +90,11 @@ export function MenuItemManager() {
     e.preventDefault();
     const payload = {
       name: form.name,
+      name_al: form.name_al || null,
+      name_mk: form.name_mk || null,
       description: form.description || null,
+      description_al: form.description_al || null,
+      description_mk: form.description_mk || null,
       price: parseFloat(form.price),
       category_id: form.category_id,
       is_available: form.is_available,
@@ -87,10 +104,10 @@ export function MenuItemManager() {
 
     try {
       if (editId) {
-        await updateItem.mutateAsync({ id: editId, ...payload });
+        await updateItem.mutateAsync({ id: editId, ...payload } as any);
         toast.success("Item updated");
       } else {
-        await createItem.mutateAsync({ ...payload, sort_order: (items?.length || 0) + 1 });
+        await createItem.mutateAsync({ ...payload, sort_order: (items?.length || 0) + 1 } as any);
         toast.success("Item created");
       }
       setDialogOpen(false);
@@ -120,11 +137,11 @@ export function MenuItemManager() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-display font-semibold text-foreground">Menu Items</h2>
+        <h2 className="text-xl font-display font-semibold text-foreground">{t("admin.tabs.items")}</h2>
         <Dialog open={dialogOpen} onOpenChange={(o) => { setDialogOpen(o); if (!o) resetForm(); }}>
           <DialogTrigger asChild>
             <Button className="font-body gap-2" disabled={!categories?.length}>
-              <Plus className="w-4 h-4" /> Add Item
+              <Plus className="w-4 h-4" /> {t("categories.add").replace("Category", "Item")}
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
@@ -132,18 +149,49 @@ export function MenuItemManager() {
               <DialogTitle className="font-display">{editId ? "Edit" : "New"} Menu Item</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4 mt-2">
+              {/* Name & Description with language tabs */}
+              <Tabs defaultValue="en" className="w-full">
+                <TabsList className="grid w-full grid-cols-3 h-9">
+                  <TabsTrigger value="en" className="text-xs font-body">🇬🇧 EN</TabsTrigger>
+                  <TabsTrigger value="al" className="text-xs font-body">🇦🇱 AL</TabsTrigger>
+                  <TabsTrigger value="mk" className="text-xs font-body">🇲🇰 MK</TabsTrigger>
+                </TabsList>
+                <TabsContent value="en" className="space-y-3 mt-3">
+                  <div className="space-y-2">
+                    <Label className="font-body">Name (English) *</Label>
+                    <Input value={form.name} onChange={(e) => setField("name", e.target.value)} required className="h-11 font-body" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="font-body">Description (English)</Label>
+                    <Textarea value={form.description} onChange={(e) => setField("description", e.target.value)} className="font-body" />
+                  </div>
+                </TabsContent>
+                <TabsContent value="al" className="space-y-3 mt-3">
+                  <div className="space-y-2">
+                    <Label className="font-body">Emri (Shqip)</Label>
+                    <Input value={form.name_al} onChange={(e) => setField("name_al", e.target.value)} className="h-11 font-body" placeholder="Leave empty to use English" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="font-body">Përshkrimi (Shqip)</Label>
+                    <Textarea value={form.description_al} onChange={(e) => setField("description_al", e.target.value)} className="font-body" placeholder="Leave empty to use English" />
+                  </div>
+                </TabsContent>
+                <TabsContent value="mk" className="space-y-3 mt-3">
+                  <div className="space-y-2">
+                    <Label className="font-body">Име (Македонски)</Label>
+                    <Input value={form.name_mk} onChange={(e) => setField("name_mk", e.target.value)} className="h-11 font-body" placeholder="Leave empty to use English" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="font-body">Опис (Македонски)</Label>
+                    <Textarea value={form.description_mk} onChange={(e) => setField("description_mk", e.target.value)} className="font-body" placeholder="Leave empty to use English" />
+                  </div>
+                </TabsContent>
+              </Tabs>
+
               <div className="grid grid-cols-2 gap-4">
-                <div className="col-span-2 space-y-2">
-                  <Label className="font-body">Name</Label>
-                  <Input value={form.name} onChange={(e) => setField("name", e.target.value)} required className="h-11 font-body" />
-                </div>
-                <div className="col-span-2 space-y-2">
-                  <Label className="font-body">Description</Label>
-                  <Textarea value={form.description} onChange={(e) => setField("description", e.target.value)} className="font-body" />
-                </div>
                 <div className="space-y-2">
-                  <Label className="font-body">Price (€)</Label>
-                  <Input type="number" step="0.01" min="0" value={form.price} onChange={(e) => setField("price", e.target.value)} required className="h-11 font-body" />
+                  <Label className="font-body">Price (ден)</Label>
+                  <Input type="number" step="1" min="0" value={form.price} onChange={(e) => setField("price", e.target.value)} required className="h-11 font-body" />
                 </div>
                 <div className="space-y-2">
                   <Label className="font-body">Category</Label>
@@ -196,7 +244,7 @@ export function MenuItemManager() {
               </div>
 
               <Button type="submit" className="w-full h-11 font-body" disabled={createItem.isPending || updateItem.isPending || !form.category_id}>
-                {editId ? "Save Changes" : "Create Item"}
+                {editId ? t("categories.save") : "Create Item"}
               </Button>
             </form>
           </DialogContent>
@@ -230,7 +278,7 @@ export function MenuItemManager() {
                   {item.is_popular && <span className="text-xs text-gold font-body">★</span>}
                 </div>
                 <p className="text-sm text-muted-foreground font-body">
-                  €{Number(item.price).toFixed(2)} · {(item as any).categories?.name || "—"}
+                  {Math.round(Number(item.price))} ден · {(item as any).categories?.name || "—"}
                 </p>
               </div>
               <div className="flex items-center gap-2">
@@ -251,12 +299,12 @@ export function MenuItemManager() {
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
-                        <AlertDialogTitle className="font-display">Delete "{item.name}"?</AlertDialogTitle>
+                        <AlertDialogTitle className="font-display">{t("categories.deleteTitle")} "{item.name}"?</AlertDialogTitle>
                         <AlertDialogDescription className="font-body">This action cannot be undone.</AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
-                        <AlertDialogCancel className="font-body">Cancel</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => handleDelete(item.id)} className="bg-destructive text-destructive-foreground font-body">Delete</AlertDialogAction>
+                        <AlertDialogCancel className="font-body">{t("categories.cancel")}</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => handleDelete(item.id)} className="bg-destructive text-destructive-foreground font-body">{t("categories.delete")}</AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>

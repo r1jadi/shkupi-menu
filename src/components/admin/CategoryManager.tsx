@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
 } from "@/components/ui/dialog";
@@ -26,23 +27,42 @@ export function CategoryManager() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
   const [name, setName] = useState("");
+  const [nameAl, setNameAl] = useState("");
+  const [nameMk, setNameMk] = useState("");
   const [description, setDescription] = useState("");
+  const [descAl, setDescAl] = useState("");
+  const [descMk, setDescMk] = useState("");
 
-  const resetForm = () => { setName(""); setDescription(""); setEditId(null); };
+  const resetForm = () => { setName(""); setNameAl(""); setNameMk(""); setDescription(""); setDescAl(""); setDescMk(""); setEditId(null); };
 
-  const openEdit = (cat: { id: string; name: string; description: string | null }) => {
-    setEditId(cat.id); setName(cat.name); setDescription(cat.description || ""); setDialogOpen(true);
+  const openEdit = (cat: any) => {
+    setEditId(cat.id);
+    setName(cat.name);
+    setNameAl(cat.name_al || "");
+    setNameMk(cat.name_mk || "");
+    setDescription(cat.description || "");
+    setDescAl(cat.description_al || "");
+    setDescMk(cat.description_mk || "");
+    setDialogOpen(true);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const payload: any = {
+      name,
+      name_al: nameAl || null,
+      name_mk: nameMk || null,
+      description: description || null,
+      description_al: descAl || null,
+      description_mk: descMk || null,
+    };
     try {
       if (editId) {
-        await updateCategory.mutateAsync({ id: editId, name, description: description || null });
+        await updateCategory.mutateAsync({ id: editId, ...payload });
         toast.success(t("categories.updated"));
       } else {
         const sortOrder = (categories?.length || 0) + 1;
-        await createCategory.mutateAsync({ name, description: description || null, sort_order: sortOrder });
+        await createCategory.mutateAsync({ ...payload, sort_order: sortOrder });
         toast.success(t("categories.created"));
       }
       setDialogOpen(false); resetForm();
@@ -73,14 +93,44 @@ export function CategoryManager() {
               <DialogTitle className="font-display">{editId ? t("categories.edit") : t("categories.new")}</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4 mt-2">
-              <div className="space-y-2">
-                <Label className="font-body">{t("categories.name")}</Label>
-                <Input value={name} onChange={(e) => setName(e.target.value)} placeholder={t("categories.namePlaceholder")} required className="h-11 font-body" />
-              </div>
-              <div className="space-y-2">
-                <Label className="font-body">{t("categories.description")}</Label>
-                <Textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder={t("categories.descPlaceholder")} className="font-body" />
-              </div>
+              <Tabs defaultValue="en" className="w-full">
+                <TabsList className="grid w-full grid-cols-3 h-9">
+                  <TabsTrigger value="en" className="text-xs font-body">🇬🇧 EN</TabsTrigger>
+                  <TabsTrigger value="al" className="text-xs font-body">🇦🇱 AL</TabsTrigger>
+                  <TabsTrigger value="mk" className="text-xs font-body">🇲🇰 MK</TabsTrigger>
+                </TabsList>
+                <TabsContent value="en" className="space-y-3 mt-3">
+                  <div className="space-y-2">
+                    <Label className="font-body">Name (English) *</Label>
+                    <Input value={name} onChange={(e) => setName(e.target.value)} placeholder={t("categories.namePlaceholder")} required className="h-11 font-body" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="font-body">{t("categories.description")}</Label>
+                    <Textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder={t("categories.descPlaceholder")} className="font-body" />
+                  </div>
+                </TabsContent>
+                <TabsContent value="al" className="space-y-3 mt-3">
+                  <div className="space-y-2">
+                    <Label className="font-body">Emri (Shqip)</Label>
+                    <Input value={nameAl} onChange={(e) => setNameAl(e.target.value)} className="h-11 font-body" placeholder="Leave empty to use English" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="font-body">Përshkrimi (Shqip)</Label>
+                    <Textarea value={descAl} onChange={(e) => setDescAl(e.target.value)} className="font-body" placeholder="Leave empty to use English" />
+                  </div>
+                </TabsContent>
+                <TabsContent value="mk" className="space-y-3 mt-3">
+                  <div className="space-y-2">
+                    <Label className="font-body">Име (Македонски)</Label>
+                    <Input value={nameMk} onChange={(e) => setNameMk(e.target.value)} className="h-11 font-body" placeholder="Leave empty to use English" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="font-body">Опис (Македонски)</Label>
+                    <Textarea value={descMk} onChange={(e) => setDescMk(e.target.value)} className="font-body" placeholder="Leave empty to use English" />
+                  </div>
+                </TabsContent>
+              </Tabs>
+
               <Button type="submit" className="w-full h-11 font-body" disabled={createCategory.isPending || updateCategory.isPending}>
                 {editId ? t("categories.save") : t("categories.create")}
               </Button>

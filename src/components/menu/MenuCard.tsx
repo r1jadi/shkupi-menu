@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import type { MenuItem } from "@/hooks/useMenuItems";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { useLocalized } from "@/hooks/useLocalized";
 
 interface Props {
   item: MenuItem;
@@ -10,6 +11,10 @@ interface Props {
 
 export function MenuCard({ item, index, isPopular }: Props) {
   const { t } = useLanguage();
+  const loc = useLocalized();
+
+  const localName = loc.name(item);
+  const localDesc = loc.description(item);
 
   return (
     <motion.div
@@ -25,7 +30,7 @@ export function MenuCard({ item, index, isPopular }: Props) {
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">
               <h3 className="font-display font-semibold text-card-foreground text-base leading-tight">
-                {item.name}
+                {localName}
               </h3>
               {isPopular && (
                 <span className="inline-flex items-center gap-1 mt-1 text-xs font-body font-medium text-gold">
@@ -34,12 +39,12 @@ export function MenuCard({ item, index, isPopular }: Props) {
               )}
             </div>
             <span className="font-body font-semibold text-primary text-base whitespace-nowrap">
-              €{Number(item.price).toFixed(2)}
+              {loc.price(Number(item.price))}
             </span>
           </div>
-          {item.description && (
+          {localDesc && (
             <p className="text-muted-foreground text-sm font-body mt-2 line-clamp-2 leading-relaxed">
-              {item.description}
+              {localDesc}
             </p>
           )}
         </div>
@@ -48,7 +53,7 @@ export function MenuCard({ item, index, isPopular }: Props) {
           <div className="shrink-0 w-20 h-20 md:w-24 md:h-24 rounded-lg overflow-hidden">
             <img
               src={item.image_url}
-              alt={item.name}
+              alt={localName}
               loading="lazy"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />

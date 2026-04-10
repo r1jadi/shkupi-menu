@@ -8,6 +8,7 @@ import { MenuHeader } from "@/components/menu/MenuHeader";
 import { CategoryNav } from "@/components/menu/CategoryNav";
 import { UtensilsCrossed } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { useLocalized } from "@/hooks/useLocalized";
 
 const Index = () => {
   const { data: categories, isLoading: catLoading } = useCategories();
@@ -15,6 +16,7 @@ const Index = () => {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const { t } = useLanguage();
+  const loc = useLocalized();
 
   const isLoading = catLoading || itemsLoading;
 
@@ -118,10 +120,10 @@ const Index = () => {
                       viewport={{ once: true }}
                     >
                       <h2 className="text-2xl font-display font-semibold text-foreground mb-1">
-                        {category.name}
+                        {loc.name(category)}
                       </h2>
-                      {category.description && (
-                        <p className="text-muted-foreground text-sm mb-5">{category.description}</p>
+                      {loc.description(category) && (
+                        <p className="text-muted-foreground text-sm mb-5">{loc.description(category)}</p>
                       )}
                     </motion.div>
                     <div className="grid gap-4">
